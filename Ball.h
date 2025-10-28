@@ -1,19 +1,23 @@
 #ifndef BALL_H
 #define BALL_H
 
-#include "HeightMap.h"
-#include "PhysicsBody.h"
+#include "ObjMesh.h"
+#include "Terrain.h"
+#include <QVector3D>
 
-class Ball : public PhysicsBody
+class Ball : public ObjMesh
 {
 public:
-    Ball();
-    HeightMap* heightmap;
+    Ball(const std::string& filename);
 
-    Ball(float m = 1.0f, QVector3D startPos = {0,0,0}, HeightMap* map = nullptr)
-        : PhysicsBody(m, startPos), heightmap(map){}
+    void update(float dt, Terrain* terrain = nullptr);
 
+    QVector3D velocity;
+    QVector3D acceleration;
 
+    float radius   = 0.2f;
+    float gravity  = -9.81f;
+    float friction = 0.995f;
 };
 
 #endif // BALL_H

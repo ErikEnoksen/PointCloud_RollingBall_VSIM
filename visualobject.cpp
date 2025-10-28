@@ -11,6 +11,7 @@ void VisualObject::move(float x, float y, float z)
     Position.setX(mMatrix(0, 3));
     Position.setY(mMatrix(1, 3));
     Position.setZ(mMatrix(2, 3));
+
 }
 
 void VisualObject::scale(float s)
@@ -36,6 +37,10 @@ void VisualObject::setPosition(float x, float y, float z)
     mMatrix(0, 3) = x; // Position in the x-axis
     mMatrix(1, 3) = y; // Position in the y-axis
     mMatrix(2, 3) = z; // Position in the z-axis
+
+    Position.setX(x);
+    Position.setY(y);
+    Position.setZ(z);
 }
 
 void VisualObject::setXPosition(float x, float z)

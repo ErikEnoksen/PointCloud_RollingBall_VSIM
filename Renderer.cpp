@@ -2,6 +2,8 @@
 #include <QVulkanFunctions>
 #include <QFile>
 #include <fstream>
+#include "Ball.h"
+#include "Terrain.h"
 #include "VulkanWindow.h"
 #include "WorldAxis.h"
 #include "Triangle.h"
@@ -31,11 +33,15 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     mObjects.push_back(new Triangle());
     mObjects.push_back(new TriangleSurface());
     mObjects.push_back((new WorldAxis()));
-    mObjects.push_back(new HeightMap());
+    //mObjects.push_back(new HeightMap());
+    mObjects.push_back(new Terrain());
     mObjects.push_back(new ObjMesh(assetPath + "suzanne.obj"));
+    mObjects.push_back(new Ball(assetPath + "sphere.obj"));
+
+
     //mObjects.push_back(new Enemy(assetPath + "sphere.obj"));
     //mObjects.push_back(new BezierCurve());
-    mObjects.at(3)->setTextureType(1);
+    mObjects.at(2)->setTextureType(1);
     mObjects.at(4)->setTextureType(2);
     mObjects.at(1)->setTextureType(0);
 
@@ -44,18 +50,23 @@ Renderer::Renderer(QVulkanWindow *w, bool msaa)
     mObjects.at(0)->setName("tri");
     mObjects.at(1)->setName("quad");
     mObjects.at(2)->setName("axis");
-    mObjects.at(3)->setName("terrain");
+    //mObjects.at(3)->setName("terrain");
+    mObjects.at(3)->setName("OtherTerrain");
     mObjects.at(4)->setName("suzanne");
+    mObjects.at(5)->setName("Ball");
+
 
     //mObjects.at(5)->setName("Enemy");
     //mObjects.at(6)->setName("Bezier");
-    dynamic_cast<HeightMap*>(mObjects.at(3))->makeTerrain(assetPath + "Heightmap.jpg");
+    //dynamic_cast<HeightMap*>(mObjects.at(3))->makeTerrain(assetPath + "Heightmap.jpg");
 
     //mObjects.at(6)->setPosition(0, -3, 0);
     //mObjects.at(1)->scale(.1f);
     //mObjects.at(1)->setPosition(-4200, 0, -900);
     //mObjects.at(4)->setPosition(10, 0, 200);
     mObjects.at(4)->rotate(180, 0 ,1, 0);
+
+
 
 
     // **************************************
@@ -335,32 +346,31 @@ void Renderer::startNextFrame()
 
     mVulkanWindow->handleInput(deltaTime);
 
-    HeightMap* heightMap = nullptr;
-    for (auto obj : mObjects) {
-        heightMap = dynamic_cast<HeightMap*>(obj);
-        if (heightMap)
-            break;
-    }
+    // HeightMap* heightMap = nullptr;
+    // for (auto obj : mObjects) {
+    //     heightMap = dynamic_cast<HeightMap*>(obj);
+    //     if (heightMap)
+    //         break;
+    // }
 
+    // if (heightMap) {
+    //     QVector3D posXZ = QVector3D(mObjects.at(4)->Position.x(), 0.0f, mObjects.at(4)->Position.z());
+    //     float newY = heightMap->getHeight(posXZ.x(), posXZ.z());
+    //     float deltaY = newY - mObjects.at(4)->Position.y() + 0.5f;
+    //     mObjects.at(4)->move(0, deltaY, 0);
+    //     if(newY == 0.f){
+    //         mObjects.at(4)->setPosition(10, 0, 5);
+    //     }
 
-    if (heightMap) {
-        QVector3D posXZ = QVector3D(mObjects.at(4)->Position.x(), 0.0f, mObjects.at(4)->Position.z());
-        float newY = heightMap->getHeight(posXZ.x(), posXZ.z());
-        float deltaY = newY - mObjects.at(4)->Position.y() + 0.5f;
-        mObjects.at(4)->move(0, deltaY, 0);
-        if(newY == 0.f){
-            mObjects.at(4)->setPosition(10, 0, 5);
-        }
-
-        for (auto obj : mObjects) {
-            if (obj->isEnemy) {
-                QVector3D posEnemyXZ = QVector3D(obj->Position.x(), 0.0f, obj->Position.z());
-                float newEnemyY = heightMap->getHeight(posEnemyXZ.x(), posEnemyXZ.z());
-                float deltaEnemyY = newEnemyY - obj->Position.y() + 0.5f;
-                obj->move(0, deltaEnemyY, 0);
-            }
-        }
-    }
+    //     for (auto obj : mObjects) {
+    //         if (obj->isEnemy) {
+    //             QVector3D posEnemyXZ = QVector3D(obj->Position.x(), 0.0f, obj->Position.z());
+    //             float newEnemyY = heightMap->getHeight(posEnemyXZ.x(), posEnemyXZ.z());
+    //             float deltaEnemyY = newEnemyY - obj->Position.y() + 0.5f;
+    //             obj->move(0, deltaEnemyY, 0);
+    //         }
+    //     }
+    // }
 
     // QVector3D playerPos = mObjects.at(4)->Position;
     // for (auto obj : mObjects) {
@@ -368,6 +378,26 @@ void Renderer::startNextFrame()
     //         static_cast<Enemy*>(obj)->update(deltaTime, playerPos);
     //     }
     // }
+
+    Terrain* terrain = nullptr;
+    for (auto obj : mObjects)
+    {
+        terrain = dynamic_cast<Terrain*>(obj);
+        if (terrain) break;
+    }
+
+    if (terrain)
+    {
+        for (auto obj : mObjects)
+        {
+            Ball* ball = dynamic_cast<Ball*>(obj);
+            if (ball)
+            {
+                ball->update(deltaTime, terrain);
+            }
+        }
+    }
+
 
     mCollisionAgent.checkCollision();
     mCamera.followPlayer(mObjects.at(4)->Position, mCamera.cameraOffset);

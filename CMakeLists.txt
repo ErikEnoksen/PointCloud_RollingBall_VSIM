@@ -28,6 +28,7 @@ qt_add_executable(QtVulkanApp
     RollingBall.h RollingBall.cpp
     PhysicsBody.h PhysicsBody.cpp
     Ball.h Ball.cpp
+    Terrain.h Terrain.cpp
 )
 # Define the shader files
 set(SHADER_FILES
