@@ -6,7 +6,7 @@ Ball::Ball(const std::string& filename)
     : ObjMesh(filename)
 {
     scale(1.f);
-    setPosition(4.0f, 3.0f, 1.0f);
+    setPosition(4.0f, 0.0f, 1.0f);
     velocity = QVector3D(0.0f, 0.0f, 0.0f);
 
 }
@@ -26,10 +26,12 @@ void Ball::update(float dt, Terrain* terrain)
 
     QVector3D gravity(0.0f, -9.81f, 0.0f);
 
-
     QVector3D tangentAcc = gravity - QVector3D::dotProduct(gravity, normal) * normal;
 
     velocity += tangentAcc * dt;
+
+
+    velocity *= friction;
 
     pos += velocity * dt;
 

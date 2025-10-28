@@ -17,7 +17,7 @@ public:
 
     float radius   = 0.2f;
     float gravity  = -9.81f;
-    float friction = 0.995f;
+    float friction = 0.998f;
 };
 
 #endif // BALL_H
