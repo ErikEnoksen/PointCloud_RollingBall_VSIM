@@ -29,11 +29,6 @@ Terrain::Terrain()
 
 
     mMatrix.setToIdentity();
-
-    qDebug() << "=== Terrain (WORLD) Vertices ===";
-    for (auto& v : mVertices)
-        qDebug() << "x:" << v.x << "y:" << v.y << "z:" << v.z;
-    qDebug() << "================================";
 }
 
 
