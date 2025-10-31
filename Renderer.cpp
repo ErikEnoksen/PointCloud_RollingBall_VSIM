@@ -705,7 +705,7 @@ void Renderer::createDescriptorSetLayouts()
 
 void Renderer::createUniformBuffer()
 {
-    VkDeviceSize bufferSize = 64 + 64;      // two 4x4 matrices
+    VkDeviceSize bufferSize = 64 + 64 + 64 +64 + 64;      // two 4x4 matrices
 
     mUniformBuffer = createGeneralBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, 
         VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
@@ -732,7 +732,7 @@ void Renderer::createDescriptorSet()
     VkDescriptorBufferInfo bufferInfo{};
     bufferInfo.buffer = mUniformBuffer.mBuffer;
     bufferInfo.offset = 0;
-    bufferInfo.range = 64 + 64;      // two 4x4 matrices
+    bufferInfo.range = 64 + 64 + 64 + 64 + 64;      // two 4x4 matrices
 
     VkWriteDescriptorSet descriptorWrite{};
     descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
