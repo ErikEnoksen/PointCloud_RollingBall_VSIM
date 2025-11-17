@@ -32,15 +32,18 @@ TriangleSurface::TriangleSurface(const std::string &filename)
     std::ifstream inn(filename);
     if (!inn.is_open())
         return;
-    // read input from math part of compulsory
+
     int n;
-    Vertex v;
     inn >> n;
+
     for (auto i=0; i<n; i++)
     {
-        inn >> v;
+        float x, y, z;
+        inn >> x >> y >> z;
+
+        Vertex v{x, y, z, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f};
         mVertices.push_back(v);
-        //qDebug() << v.x << v.y << v.z;
     }
+
     inn.close();
 }
